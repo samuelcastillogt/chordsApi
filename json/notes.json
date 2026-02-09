@@ -1,0 +1,98 @@
+[
+    {
+        "note": {
+            "american": "C",
+            "classic": "DO",
+            "sound": "https://example.com/sounds/C.mp3",
+            "image": "https://example.com/images/C_chord.png"
+        }
+    },
+    {
+        "note": {
+            "american": "C#",
+            "classic": "DO#",
+            "sound": "https://example.com/sounds/Csharp.mp3",
+            "image": "https://example.com/images/Csharp_chord.png"
+        }
+    },
+    {
+        "note": {
+            "american": "D",
+            "classic": "RE",
+            "sound": "https://example.com/sounds/D.mp3",
+            "image": "https://example.com/images/D_chord.png"
+        }
+    },
+    {
+        "note": {
+            "american": "D#",
+            "classic": "RE#",
+            "sound": "https://example.com/sounds/Dsharp.mp3",
+            "image": "https://example.com/images/Dsharp_chord.png"
+        }
+    },
+    {
+        "note": {
+            "american": "E",
+            "classic": "MI",
+            "sound": "https://example.com/sounds/E.mp3",
+            "image": "https://example.com/images/E_chord.png"
+        }
+    },
+    {
+        "note": {
+            "american": "F",
+            "classic": "FA",
+            "sound": "https://example.com/sounds/F.mp3",
+            "image": "https://example.com/images/F_chord.png"
+        }
+    },
+    {
+        "note": {
+            "american": "F#",
+            "classic": "FA#",
+            "sound": "https://example.com/sounds/Fsharp.mp3",
+            "image": "https://example.com/images/Fsharp_chord.png"
+        }
+    },
+    {
+        "note": {
+            "american": "G",
+            "classic": "SOL",
+            "sound": "https://example.com/sounds/G.mp3",
+            "image": "https://example.com/images/G_chord.png"
+        }
+    },
+    {
+        "note": {
+            "american": "G#",
+            "classic": "SOL#",
+            "sound": "https://example.com/sounds/Gsharp.mp3",
+            "image": "https://example.com/images/Gsharp_chord.png"
+        }
+    },
+    {
+        "note": {
+            "american": "A",
+            "classic": "LA",
+            "sound": "https://example.com/sounds/A.mp3",
+            "image": "https://example.com/images/A_chord.png"
+        }
+    },
+    {
+        "note": {
+            "american": "A#",
+            "classic": "LA#",
+            "sound": "https://example.com/sounds/Asharp.mp3",
+            "image": "https://example.com/images/Asharp_chord.png"
+        }
+    },
+    {
+        "note": {
+            "american": "B",
+            "classic": "SI",
+            "sound": "https://example.com/sounds/B.mp3",
+            "image": "https://example.com/images/B_chord.png"
+        }
+    }
+]

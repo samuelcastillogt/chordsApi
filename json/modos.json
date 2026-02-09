@@ -1,0 +1,107 @@
+[
+    {
+        "data": {
+            "name": "Ionico",
+            "intervalos": [
+                "T",
+                "T",
+                "sT",
+                "T",
+                "T",
+                "T",
+                "sT"
+            ],
+            "sentimiento": "Brillante, estable, feliz"
+        }
+    },
+    {
+        "data": {
+            "name": "Dorico",
+            "intervalos": [
+                "T",
+                "sT",
+                "T",
+                "T",
+                "T",
+                "sT",
+                "T"
+            ],
+            "sentimiento": "Serio, esperanzador, reflexivo"
+        }
+    },
+    {
+        "data": {
+            "name": "Frigio",
+            "intervalos": [
+                "sT",
+                "T",
+                "T",
+                "T",
+                "sT",
+                "T",
+                "T"
+            ],
+            "sentimiento": "Oscuro, tenso, exótico"
+        }
+    },
+    {
+        "data": {
+            "name": "Lidio",
+            "intervalos": [
+                "T",
+                "T",
+                "T",
+                "sT",
+                "T",
+                "T",
+                "sT"
+            ],
+            "sentimiento": "Soñador, luminoso, etéreo"
+        }
+    },
+    {
+        "data": {
+            "name": "Mixolidio",
+            "intervalos": [
+                "T",
+                "T",
+                "sT",
+                "T",
+                "T",
+                "sT",
+                "T"
+            ],
+            "sentimiento": "Relajado, bluesero, festivo"
+        }
+    },
+    {
+        "data": {
+            "name": "Eolico",
+            "intervalos": [
+                "T",
+                "sT",
+                "T",
+                "T",
+                "sT",
+                "T",
+                "T"
+            ],
+            "sentimiento": "Triste, melancólico, emotivo"
+        }
+    },
+    {
+        "data": {
+            "name": "Locrio",
+            "intervalos": [
+                "sT",
+                "T",
+                "T",
+                "sT",
+                "T",
+                "T",
+                "T"
+            ],
+            "sentimiento": "Inestable, oscuro, inquietante"
+        }
+    }
+]
