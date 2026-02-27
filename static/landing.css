@@ -1,0 +1,278 @@
+:root {
+  --lp-bg-1: #ecf2f1;
+  --lp-bg-2: #b7ece6;
+  --lp-bg-3: #5ab7d6;
+  --lp-ink: #102027;
+  --lp-muted: #35505d;
+  --lp-card: rgba(255, 255, 255, 0.72);
+  --lp-accent: #1f8a70;
+  --lp-accent-2: #146a59;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body.lp-body {
+  margin: 0;
+  color: var(--lp-ink);
+  font-family: "Avenir Next", "Segoe UI", Roboto, sans-serif;
+  background: radial-gradient(circle at 10% 20%, var(--lp-bg-2), transparent 34%),
+    radial-gradient(circle at 90% 88%, #7fd0dd, transparent 28%),
+    linear-gradient(140deg, var(--lp-bg-1), var(--lp-bg-3));
+  min-height: 100vh;
+}
+
+.lp-shell {
+  width: min(1100px, calc(100% - 32px));
+  margin: 16px auto;
+  border-radius: 18px;
+  background: rgba(245, 250, 250, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.62);
+  box-shadow: 0 24px 48px rgba(7, 31, 49, 0.2);
+  overflow: hidden;
+}
+
+.lp-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 28px;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.lp-brand {
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.lp-nav {
+  display: flex;
+  gap: 22px;
+}
+
+.lp-nav a,
+.lp-login,
+.lp-footer a {
+  color: var(--lp-ink);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.lp-login {
+  border: 1px solid rgba(10, 33, 45, 0.22);
+  border-radius: 999px;
+  padding: 8px 14px;
+}
+
+.lp-hero {
+  padding: 42px 28px 22px;
+  text-align: center;
+}
+
+.lp-badge {
+  margin: 0 auto 14px;
+  display: inline-block;
+  border-radius: 999px;
+  padding: 6px 12px;
+  color: var(--lp-accent-2);
+  font-weight: 700;
+  background: rgba(31, 138, 112, 0.15);
+}
+
+.lp-hero h1 {
+  margin: 0 auto;
+  max-width: 760px;
+  font-size: clamp(2rem, 4.3vw, 4rem);
+  line-height: 1.05;
+}
+
+.lp-subtitle {
+  margin: 18px auto 0;
+  max-width: 760px;
+  color: var(--lp-muted);
+  font-size: 1.05rem;
+}
+
+.lp-cta-row {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.lp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 162px;
+  padding: 11px 16px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.lp-btn-primary {
+  color: white;
+  background: linear-gradient(180deg, var(--lp-accent), var(--lp-accent-2));
+}
+
+.lp-btn-ghost {
+  color: var(--lp-ink);
+  border: 1px solid rgba(10, 33, 45, 0.25);
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.lp-guitar-stage {
+  position: relative;
+  margin-top: 28px;
+  padding: 26px;
+}
+
+.lp-guitar {
+  margin: 0 auto;
+  width: min(780px, 100%);
+  display: grid;
+  grid-template-columns: 190px 1fr 60px;
+  align-items: center;
+  gap: 0;
+  filter: drop-shadow(0 14px 20px rgba(7, 30, 44, 0.23));
+}
+
+.lp-guitar-body {
+  width: 190px;
+  height: 190px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 33% 28%, #fefefe, #7b8a90 62%, #17181a 100%);
+}
+
+.lp-guitar-neck {
+  height: 26px;
+  background: linear-gradient(90deg, #564138, #c5a487 48%, #3e2f29);
+  border-radius: 7px;
+}
+
+.lp-guitar-head {
+  width: 58px;
+  height: 54px;
+  border-radius: 9px;
+  background: linear-gradient(120deg, #191b20, #393f45);
+}
+
+.lp-line {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(820px, 96%);
+  height: 50px;
+  border: 2px solid rgba(8, 27, 38, 0.72);
+  border-color: rgba(8, 27, 38, 0.72) transparent transparent transparent;
+  border-radius: 70%;
+}
+
+.lp-line-top {
+  top: 10px;
+}
+
+.lp-line-bottom {
+  bottom: 6px;
+  transform: translateX(-50%) rotate(180deg);
+}
+
+.lp-benefits {
+  padding: 20px 28px 14px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.lp-benefits article {
+  border-radius: 12px;
+  padding: 14px;
+  background: var(--lp-card);
+  border: 1px solid rgba(255, 255, 255, 0.58);
+}
+
+.lp-benefits h2,
+.lp-how h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.lp-benefits p {
+  margin: 8px 0 0;
+  color: var(--lp-muted);
+}
+
+.lp-how {
+  padding: 12px 28px 24px;
+}
+
+.lp-how ol {
+  margin: 10px 0 0;
+  padding-left: 18px;
+  color: var(--lp-muted);
+  line-height: 1.7;
+}
+
+.lp-footer {
+  padding: 14px 28px 22px;
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid rgba(13, 37, 51, 0.12);
+}
+
+@media (max-width: 900px) {
+  .lp-nav {
+    display: none;
+  }
+
+  .lp-benefits {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .lp-guitar {
+    grid-template-columns: 120px 1fr 40px;
+  }
+
+  .lp-guitar-body {
+    width: 120px;
+    height: 120px;
+  }
+
+  .lp-guitar-neck {
+    height: 18px;
+  }
+
+  .lp-guitar-head {
+    width: 40px;
+    height: 36px;
+  }
+}
+
+@media (max-width: 640px) {
+  .lp-shell {
+    width: calc(100% - 16px);
+    margin: 8px auto;
+  }
+
+  .lp-topbar,
+  .lp-hero,
+  .lp-benefits,
+  .lp-how,
+  .lp-footer {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .lp-benefits {
+    grid-template-columns: 1fr;
+  }
+
+  .lp-footer {
+    flex-direction: column;
+    gap: 8px;
+  }
+}

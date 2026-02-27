@@ -1,41 +1,14 @@
-from flask import Flask, request, Response, jsonify
+from flask import Flask, request, Response, jsonify, send_from_directory, render_template
 from flask_cors import CORS
 import json
 from typing import List, Optional
 import hashlib
+from pathlib import Path
 app = Flask(__name__)
 CORS(app)
 
-@app.route("/")
-def hello_world():
-    return "<p>Hello, World!</p>"
-
-@app.route("/api/v1/health")
-def health():
-    return "True"
-
-@app.route("/api/v1/modes")
-def modes():
-    with open("json/modos.json", "r") as f:
-        return json.load(f)
-
-@app.route("/api/v1/notes")
-def notes():
-    with open("json/notes.json", "r") as f:
-        return json.load(f)
-
-@app.route("/api/v1/scales/<string:note>/<string:mode>")
-def scales(note, mode):
-    with open("json/scales.json", "r") as f:
-        scales_data = json.load(f)
-        for item in scales_data:
-            if note in item:
-                return item[note][mode]
-    return {"error": "Scale not found"}, 404
-
-
-
-
+BASE_DIR = Path(__file__).resolve().parent
+CHORDS_DIST_DIR = BASE_DIR / "static" / "app"
 
 CHORD_SHAPES_GUITAR = {
     "Cmaj": {"pos": [-1, 3, 2, 0, 1, 0], "fretStart": 1},
@@ -173,8 +146,51 @@ def render_guitar_svg(
 def etag_for(payload: str) -> str:
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
+@app.route("/")
+def index():
+    from datetime import datetime
+    return render_template("landing.html", year=datetime.now().year)
 
-@app.get("/v1/render/chord.svg")
+
+@app.route("/robots.txt")
+def robots_txt():
+    content = "User-agent: *\nAllow: /\nSitemap: /sitemap.xml\n"
+    return Response(content, mimetype="text/plain")
+
+
+@app.route("/sitemap.xml")
+def sitemap_xml():
+    urls = ["/", "/app", "/blog/primer-post"]
+    xml = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+    for url in urls:
+        xml.append(f"<url><loc>{url}</loc></url>")
+    xml.append("</urlset>")
+    return Response("\n".join(xml), mimetype="application/xml")
+
+@app.route("/api/v1/health")
+def health():
+    return "True"
+
+@app.route("/api/v1/modes")
+def modes():
+    with open("json/modos.json", "r") as f:
+        return json.load(f)
+
+@app.route("/api/v1/notes")
+def notes():
+    with open("json/notes.json", "r") as f:
+        return json.load(f)
+
+@app.route("/api/v1/scales/<string:note>/<string:mode>")
+def scales(note, mode):
+    with open("json/scales.json", "r") as f:
+        scales_data = json.load(f)
+        for item in scales_data:
+            if note in item:
+                return item[note][mode]
+    return {"error": "Scale not found"}, 404
+
+@app.route("/api/v1/render/chord.svg")
 def render_chord_svg_get():
     instrument = request.args.get("instrument", "guitar")
     name = request.args.get("name", "Chord")
@@ -205,7 +221,7 @@ def render_chord_svg_get():
     return resp
 
 
-@app.post("/v1/render/chord.svg")
+@app.route("/api/v1/render/chord.svg", methods=["POST"])
 def render_chord_svg_post():
     payload = request.get_json(silent=True)
     if payload is None:
@@ -241,7 +257,7 @@ def render_chord_svg_post():
     resp.headers["ETag"] = et
     return resp
 
-@app.get("/v1/chords/guitar/<chord>.svg")
+@app.route("/api/v1/chords/guitar/<chord>.svg")
 def chord_svg_guitar(chord: str):
     shape = CHORD_SHAPES_GUITAR.get(chord)
     if not shape:
@@ -253,3 +269,28 @@ def chord_svg_guitar(chord: str):
         fret_start=shape.get("fretStart", 1),
     )
     return Response(svg, status=200, mimetype="image/svg+xml")
+
+
+@app.route("/app", defaults={"path": ""})
+@app.route("/app/<path:path>")
+def serve_chords_app(path: str):
+    if not CHORDS_DIST_DIR.exists():
+        return Response("Build not found. Run 'npm run build' inside chords.", status=404, mimetype="text/plain")
+
+    requested_file = CHORDS_DIST_DIR / path
+    if path and requested_file.exists() and requested_file.is_file():
+        return send_from_directory(CHORDS_DIST_DIR, path)
+
+    return send_from_directory(CHORDS_DIST_DIR, "index.html")
+
+
+@app.route("/blog/<string:post_id>")
+def get_blog_post(post_id: str):
+    return jsonify(
+        {
+            "id": post_id,
+            "title": f"Blog post {post_id}",
+            "summary": "Dynamic blog endpoint ready. Replace this with DB/content lookup.",
+            "url": f"/blog/{post_id}",
+        }
+    )
