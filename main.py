@@ -1,9 +1,17 @@
-from flask import Flask, request, Response, jsonify, send_from_directory, render_template
+from flask import Flask, request, Response, jsonify, send_from_directory, render_template, redirect
 from flask_cors import CORS
 import json
 from typing import List, Optional
 import hashlib
+import re
+import html
 from pathlib import Path
+from db import (
+    ensure_canciones_table,
+    canciones_table_exists,
+    insert_cancion,
+    get_cancion_by_slug,
+)
 app = Flask(__name__)
 CORS(app)
 
@@ -17,6 +25,57 @@ CHORD_SHAPES_GUITAR = {
     "Amin": {"pos": [-1, 0, 2, 2, 1, 0], "fretStart": 1},
     "Emin": {"pos": [0, 2, 2, 0, 0, 0], "fretStart": 1},
 }
+
+SONG_LIBRARY = {
+    "noche-en-seis-cuerdas": {
+        "title": "Noche en Seis Cuerdas",
+        "artist": "Guitarra App",
+        "album": "Sesion Demo",
+        "tonality": "E minor",
+        "bpm": 92,
+        "lines": [
+            {
+                "lyrics": "Sigo marcando el ritmo en la ciudad",
+                "chords": [
+                    {"name": "Emin", "position": 0},
+                    {"name": "Dmaj", "position": 18},
+                    {"name": "Cmaj", "position": 29},
+                ],
+            },
+            {
+                "lyrics": "cae la noche y vuelve a respirar",
+                "chords": [
+                    {"name": "Amin", "position": 0},
+                    {"name": "Cmaj", "position": 16},
+                    {"name": "Gmaj", "position": 26},
+                ],
+            },
+            {
+                "lyrics": "todo parece abrirse una vez mas",
+                "chords": [
+                    {"name": "Emin", "position": 0},
+                    {"name": "Dmaj", "position": 18},
+                    {"name": "Gmaj", "position": 29},
+                ],
+            },
+            {
+                "lyrics": "cuando la banda vuelve a tocar",
+                "chords": [
+                    {"name": "Amin", "position": 0},
+                    {"name": "Cmaj", "position": 16},
+                    {"name": "Emin", "position": 27},
+                ],
+            },
+        ],
+    }
+}
+SONG_DRAFTS: List[dict] = []
+DB_INIT_ERROR: Optional[str] = None
+
+try:
+    ensure_canciones_table()
+except Exception as error:
+    DB_INIT_ERROR = str(error)
 
 
 def _parse_pos_csv(pos: str) -> List[int]:
@@ -146,6 +205,114 @@ def render_guitar_svg(
 def etag_for(payload: str) -> str:
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
+
+def title_from_slug(value: str) -> str:
+    return " ".join(part.capitalize() for part in value.split("-") if part)
+
+
+def slugify(value: str) -> str:
+    lowered = value.strip().lower()
+    lowered = re.sub(r"[^a-z0-9\s-]", "", lowered)
+    lowered = re.sub(r"[\s_]+", "-", lowered)
+    lowered = re.sub(r"-{2,}", "-", lowered)
+    return lowered.strip("-")
+
+
+CHORD_TOKEN_REGEX = re.compile(
+    r"[A-G](?:#|b)?(?:maj|min|m|sus\d*|dim|aug|add\d*|M?\d*)?(?:/[A-G](?:#|b)?)?"
+)
+
+
+def is_chord_line(line: str) -> bool:
+    clean = line.strip()
+    if not clean:
+        return False
+    matches = list(CHORD_TOKEN_REGEX.finditer(line))
+    if not matches:
+        return False
+    if len(matches) >= 2:
+        return True
+    return clean in {"Em", "A", "D", "G", "C", "Bm", "F#m", "Gm", "E", "B"}
+
+
+def parse_song_text_to_lines(song_text: str) -> List[dict]:
+    raw_lines = song_text.split("\n")
+    parsed: List[dict] = []
+    idx = 0
+
+    while idx < len(raw_lines):
+        current = raw_lines[idx].rstrip()
+        if not current.strip():
+            idx += 1
+            continue
+
+        if is_chord_line(current):
+            chord_matches = list(CHORD_TOKEN_REGEX.finditer(current))
+            chords = [
+                {"name": match.group(0), "position": match.start()}
+                for match in chord_matches
+            ]
+            next_line = ""
+            if idx + 1 < len(raw_lines):
+                candidate = raw_lines[idx + 1].rstrip()
+                if candidate.strip() and not is_chord_line(candidate):
+                    next_line = candidate
+                    idx += 1
+            parsed.append({"lyrics": next_line, "chords": chords})
+        else:
+            parsed.append({"lyrics": current, "chords": []})
+
+        idx += 1
+
+    return parsed
+
+
+def build_song_payload(song_name: str) -> dict:
+    song_key = song_name.strip().lower()
+    if song_key in SONG_LIBRARY:
+        return SONG_LIBRARY[song_key]
+
+    song_title = title_from_slug(song_key) or "Cancion Demo"
+    return {
+        "title": song_title,
+        "artist": "Autor Independiente",
+        "album": "Borrador",
+        "tonality": "E minor",
+        "bpm": 90,
+        "lines": [
+            {
+                "lyrics": "Esta version aun esta en construccion",
+                "chords": [
+                    {"name": "Emin", "position": 0},
+                    {"name": "Cmaj", "position": 14},
+                    {"name": "Gmaj", "position": 27},
+                ],
+            },
+            {
+                "lyrics": "pero ya puedes probar acordes y estructura",
+                "chords": [
+                    {"name": "Amin", "position": 0},
+                    {"name": "Dmaj", "position": 23},
+                    {"name": "Emin", "position": 35},
+                ],
+            },
+        ],
+    }
+
+
+def normalize_song_raw(raw_song: str) -> str:
+    text = raw_song.replace("\r\n", "\n").replace("\r", "\n")
+    text = re.sub(r"(?is)<\s*div\s*>\s*<\s*/\s*div\s*>", "\n", text)
+    text = re.sub(r"(?is)<\s*a\b[^>]*>(.*?)<\s*/\s*a\s*>", r"\1", text)
+    text = re.sub(r"(?is)<\s*/?\s*pre\b[^>]*>", "", text)
+    text = re.sub(r"(?is)<[^>]+>", "", text)
+    text = html.unescape(text)
+
+    lines = [line.rstrip() for line in text.split("\n")]
+    text = "\n".join(lines)
+    text = re.sub(r"\n{3,}", "\n\n", text)
+    return text.strip()
+
 @app.route("/")
 def index():
     from datetime import datetime
@@ -160,12 +327,107 @@ def robots_txt():
 
 @app.route("/sitemap.xml")
 def sitemap_xml():
-    urls = ["/", "/app", "/blog/primer-post"]
+    urls = ["/", "/app", "/blog/primer-post", "/song/noche-en-seis-cuerdas"]
     xml = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
     for url in urls:
         xml.append(f"<url><loc>{url}</loc></url>")
     xml.append("</urlset>")
     return Response("\n".join(xml), mimetype="application/xml")
+
+
+@app.route("/song/<string:song_name>")
+def song_page(song_name: str):
+    return redirect(f"/app/song/{song_name}", code=302)
+
+
+@app.route("/api/v1/song/<string:song_name>")
+def song_data(song_name: str):
+    db_song = get_cancion_by_slug(song_name)
+    if db_song:
+        return jsonify(
+            {
+                "slug": db_song["slug"],
+                "title": db_song["nombre"],
+                "artist": db_song["artista"],
+                "album": "Catalogo Canciones",
+                "tonality": "N/A",
+                "bpm": 0,
+                "rawSong": db_song["cancion"],
+                "lines": parse_song_text_to_lines(db_song["cancion"]),
+                "availableChords": sorted(CHORD_SHAPES_GUITAR.keys()),
+            }
+        )
+
+    payload = build_song_payload(song_name)
+    payload["slug"] = song_name
+    payload["rawSong"] = ""
+    payload["availableChords"] = sorted(CHORD_SHAPES_GUITAR.keys())
+    return jsonify(payload)
+
+
+@app.route("/admin/song/new", methods=["GET", "POST"])
+def song_form():
+    preview = None
+    db_result = None
+    error_message = ""
+    form_data = {"slug": "", "nombre": "", "artista": "", "cancion_raw": ""}
+
+    if request.method == "POST":
+        form_data["slug"] = request.form.get("slug", "").strip()
+        form_data["nombre"] = request.form.get("nombre", "").strip()
+        form_data["artista"] = request.form.get("artista", "").strip()
+        form_data["cancion_raw"] = request.form.get("cancion_raw", "")
+
+        if not form_data["slug"] and form_data["nombre"]:
+            form_data["slug"] = slugify(form_data["nombre"])
+
+        if form_data["slug"] and form_data["nombre"] and form_data["artista"] and form_data["cancion_raw"].strip():
+            preview = {
+                "slug": form_data["slug"],
+                "nombre": form_data["nombre"],
+                "artista": form_data["artista"],
+                "cancion": normalize_song_raw(form_data["cancion_raw"]),
+            }
+            SONG_DRAFTS.append(preview)
+            try:
+                db_result = insert_cancion(
+                    slug=preview["slug"],
+                    nombre=preview["nombre"],
+                    artista=preview["artista"],
+                    cancion=preview["cancion"],
+                )
+            except Exception as error:
+                error_message = str(error)
+        else:
+            error_message = "Completa slug, nombre, artista y cancion."
+
+    return render_template(
+        "song_form.html",
+        preview=preview,
+        db_result=db_result,
+        error_message=error_message,
+        form_data=form_data,
+        drafts_count=len(SONG_DRAFTS),
+    )
+
+
+@app.route("/api/v1/song-draft/latest")
+def song_draft_latest():
+    if not SONG_DRAFTS:
+        return jsonify({"error": "No hay canciones procesadas aun"}), 404
+    return jsonify(SONG_DRAFTS[-1])
+
+
+@app.route("/api/v1/db/canciones/status")
+def canciones_table_status():
+    if DB_INIT_ERROR:
+        return jsonify({"ok": False, "table": "canciones", "error": DB_INIT_ERROR}), 500
+
+    try:
+        exists = canciones_table_exists()
+        return jsonify({"ok": True, "table": "canciones", "exists": exists})
+    except Exception as error:
+        return jsonify({"ok": False, "table": "canciones", "error": str(error)}), 500
 
 @app.route("/api/v1/health")
 def health():

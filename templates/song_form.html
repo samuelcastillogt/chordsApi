@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nuevo Borrador de Cancion</title>
+  <style>
+    :root { color-scheme: light; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: #edf3f4;
+      color: #173042;
+    }
+    .wrap {
+      width: min(1080px, calc(100% - 24px));
+      margin: 16px auto;
+      background: #fff;
+      border: 1px solid #d2dde4;
+      border-radius: 12px;
+      box-shadow: 0 14px 32px rgba(10, 38, 55, 0.12);
+      overflow: hidden;
+    }
+    .head {
+      padding: 14px 16px;
+      background: linear-gradient(180deg, #f8fbff, #edf4f8);
+      border-bottom: 1px solid #d2dde4;
+    }
+    .head h1 { margin: 0; font-size: 1.2rem; }
+    .head p { margin: 6px 0 0; color: #466273; font-size: 0.92rem; }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      padding: 14px;
+    }
+    label { display: block; font-weight: 700; margin-bottom: 6px; }
+    input, textarea {
+      width: 100%;
+      border: 1px solid #c9d6df;
+      border-radius: 8px;
+      padding: 10px;
+      font: inherit;
+      color: inherit;
+      background: #fcfdff;
+    }
+    textarea {
+      min-height: 340px;
+      resize: vertical;
+      font-family: "SF Mono", Menlo, monospace;
+      font-size: 0.93rem;
+      line-height: 1.4;
+    }
+    .full { grid-column: 1 / -1; }
+    button {
+      border: none;
+      border-radius: 10px;
+      background: #1f8a70;
+      color: white;
+      font-weight: 700;
+      padding: 10px 14px;
+      cursor: pointer;
+    }
+    .meta {
+      color: #4a697a;
+      font-size: 0.9rem;
+      margin-left: 12px;
+    }
+    .feedback {
+      padding: 0 14px 14px;
+    }
+    .ok {
+      margin: 0;
+      color: #0e6b4d;
+      font-weight: 700;
+    }
+    .error {
+      margin: 0;
+      color: #b42318;
+      font-weight: 700;
+    }
+    .preview {
+      padding: 0 14px 14px;
+    }
+    .preview h2 { margin: 0 0 8px; font-size: 1rem; }
+    pre {
+      margin: 0;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #d1dbe2;
+      background: #f6fafb;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: "SF Mono", Menlo, monospace;
+      font-size: 0.86rem;
+    }
+    @media (max-width: 860px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header class="head">
+      <h1>Formulario de Canciones (Borrador)</h1>
+      <p>Pega el bloque con etiquetas <code>&lt;A&gt;</code> y <code>&lt;div&gt;</code>. Se procesa y queda en string listo para base de datos.</p>
+    </header>
+
+    <form method="post" class="grid">
+      <div>
+        <label for="slug">Slug</label>
+        <input id="slug" name="slug" value="{{ form_data.slug }}" placeholder="adios" required />
+      </div>
+      <div>
+        <label for="nombre">Nombre</label>
+        <input id="nombre" name="nombre" value="{{ form_data.nombre }}" placeholder="Adios" required />
+      </div>
+      <div>
+        <label for="artista">Artista</label>
+        <input id="artista" name="artista" value="{{ form_data.artista }}" placeholder="Gustavo Cerati" required />
+      </div>
+      <div class="full">
+        <label for="cancion_raw">Cancion en Crudo</label>
+        <textarea id="cancion_raw" name="cancion_raw" placeholder="Pega aqui el bloque con <A>acordes</A> y <div></div>..." required>{{ form_data.cancion_raw }}</textarea>
+      </div>
+      <div class="full">
+        <button type="submit">Procesar Cancion</button>
+        <span class="meta">Borradores procesados en memoria: {{ drafts_count }}</span>
+      </div>
+    </form>
+
+    {% if db_result %}
+      <section class="feedback">
+        <p class="ok">Guardado en DB correctamente. id={{ db_result.id }}, slug={{ db_result.slug }}</p>
+      </section>
+    {% endif %}
+
+    {% if error_message %}
+      <section class="feedback">
+        <p class="error">{{ error_message }}</p>
+      </section>
+    {% endif %}
+
+    {% if preview %}
+      <section class="preview">
+        <h2>Objeto listo (nombre, artista, cancion)</h2>
+        <pre>{{ preview | tojson(indent=2) }}</pre>
+      </section>
+    {% endif %}
+  </main>
+</body>
+</html>
