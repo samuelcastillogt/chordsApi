@@ -543,6 +543,11 @@ def serve_chords_app(path: str):
     if path and requested_file.exists() and requested_file.is_file():
         return send_from_directory(CHORDS_DIST_DIR, path)
 
+    # If it looks like a static asset request (js/css/map/png/etc.) and file
+    # is missing, return 404 instead of index.html to avoid MIME/type errors.
+    if path and "." in Path(path).name:
+        return Response("Asset not found", status=404, mimetype="text/plain")
+
     return send_from_directory(CHORDS_DIST_DIR, "index.html")
 
 
