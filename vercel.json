@@ -8,11 +8,7 @@
   ],
   "functions": {
     "main.py": {
-      "includeFiles": [
-        "static/**",
-        "templates/**",
-        "json/**"
-      ]
+      "includeFiles": "{static/**,templates/**,json/**}"
     }
   },
   "routes": [
