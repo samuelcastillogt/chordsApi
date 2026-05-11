@@ -1,12 +1,15 @@
 :root {
   --lp-bg-1: #f5f5f7;
-  --lp-bg-2: #fbfbfd;
+  --lp-bg-2: #ffffff;
   --lp-ink: #1d1d1f;
-  --lp-muted: #6e6e73;
-  --lp-card: rgba(255, 255, 255, 0.76);
-  --lp-accent: #0071e3;
-  --lp-accent-2: #0060c9;
-  --lp-line: #d2d2d7;
+  --lp-muted: #333333;
+  --lp-card: #ffffff;
+  --lp-accent: #0066cc;
+  --lp-accent-focus: #0071e3;
+  --lp-accent-dark: #2997ff;
+  --lp-line: #e0e0e0;
+  --lp-soft-line: #f0f0f0;
+  --lp-dark-tile: #272729;
 }
 
 * {
@@ -17,21 +20,16 @@ body.lp-body {
   margin: 0;
   color: var(--lp-ink);
   font-family: "SF Pro Text", "SF Pro Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  background:
-    radial-gradient(1200px 560px at 12% -10%, rgba(0, 113, 227, 0.1) 0%, rgba(0, 113, 227, 0) 58%),
-    radial-gradient(1000px 520px at 96% 8%, rgba(255, 159, 10, 0.09) 0%, rgba(255, 159, 10, 0) 54%),
-    linear-gradient(180deg, var(--lp-bg-2), var(--lp-bg-1));
+  background: var(--lp-bg-1);
   min-height: 100vh;
 }
 
 .lp-shell {
-  width: min(1100px, calc(100% - 32px));
-  margin: 18px auto;
-  border-radius: 24px;
-  background: rgba(255, 255, 255, 0.82);
-  border: 1px solid rgba(210, 210, 215, 0.84);
-  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.11);
-  backdrop-filter: blur(16px) saturate(1.15);
+  width: min(1180px, calc(100% - 24px));
+  margin: 0 auto;
+  border-radius: 0;
+  background: var(--lp-bg-2);
+  border: 1px solid var(--lp-line);
   overflow: hidden;
 }
 
@@ -40,14 +38,17 @@ body.lp-body {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 18px 28px;
-  background: rgba(255, 255, 255, 0.55);
-  border-bottom: 1px solid rgba(210, 210, 215, 0.7);
+  min-height: 44px;
+  padding: 10px 28px;
+  background: #000000;
+  border-bottom: 1px solid #000000;
 }
 
 .lp-brand {
-  font-weight: 700;
-  letter-spacing: 0.02em;
+  font-size: 12px;
+  font-weight: 400;
+  color: #ffffff;
+  letter-spacing: -0.12px;
 }
 
 .lp-nav {
@@ -58,20 +59,30 @@ body.lp-body {
 .lp-nav a,
 .lp-login,
 .lp-footer a {
-  color: var(--lp-ink);
+  color: inherit;
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 400;
+}
+
+.lp-nav {
+  color: #ffffff;
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: -0.12px;
 }
 
 .lp-login {
-  border: 1px solid var(--lp-line);
+  border: 1px solid var(--lp-accent);
   border-radius: 999px;
-  padding: 8px 14px;
-  background: rgba(255, 255, 255, 0.92);
+  padding: 8px 15px;
+  font-size: 14px;
+  line-height: 1.29;
+  color: #ffffff;
+  background: var(--lp-accent);
 }
 
 .lp-hero {
-  padding: 42px 28px 22px;
+  padding: 80px 28px;
   text-align: center;
 }
 
@@ -79,26 +90,31 @@ body.lp-body {
   margin: 0 auto 14px;
   display: inline-block;
   border-radius: 999px;
-  padding: 6px 12px;
-  color: #3a3a3c;
-  font-weight: 700;
-  border: 1px solid rgba(210, 210, 215, 0.95);
-  background: rgba(255, 255, 255, 0.84);
+  padding: 8px 14px;
+  color: var(--lp-muted);
+  font-size: 14px;
+  font-weight: 400;
+  border: 1px solid var(--lp-soft-line);
+  background: #fafafc;
 }
 
 .lp-hero h1 {
   margin: 0 auto;
   max-width: 760px;
-  font-size: clamp(2rem, 4.3vw, 4rem);
+  font-size: clamp(34px, 4.8vw, 56px);
+  font-weight: 600;
   line-height: 1.07;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.28px;
 }
 
 .lp-subtitle {
   margin: 18px auto 0;
   max-width: 760px;
-  color: var(--lp-muted);
-  font-size: 1.05rem;
+  color: var(--lp-ink);
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.47;
+  letter-spacing: -0.374px;
 }
 
 .lp-cta-row {
@@ -114,22 +130,23 @@ body.lp-body {
   align-items: center;
   justify-content: center;
   min-width: 162px;
-  padding: 11px 16px;
+  padding: 11px 22px;
   border-radius: 999px;
   text-decoration: none;
-  font-weight: 700;
+  font-size: 17px;
+  font-weight: 400;
 }
 
 .lp-btn-primary {
-  color: white;
-  background: linear-gradient(180deg, var(--lp-accent), var(--lp-accent-2));
-  box-shadow: 0 10px 22px rgba(0, 113, 227, 0.26);
+  color: #ffffff;
+  background: var(--lp-accent);
+  border: 1px solid var(--lp-accent);
 }
 
 .lp-btn-ghost {
-  color: var(--lp-ink);
-  border: 1px solid var(--lp-line);
-  background: rgba(255, 255, 255, 0.88);
+  color: var(--lp-accent);
+  border: 1px solid var(--lp-accent);
+  background: #ffffff;
 }
 
 .lp-guitar-stage {
@@ -145,7 +162,7 @@ body.lp-body {
   grid-template-columns: 190px 1fr 60px;
   align-items: center;
   gap: 0;
-  filter: drop-shadow(0 14px 20px rgba(0, 0, 0, 0.16));
+  filter: drop-shadow(3px 5px 30px rgba(0, 0, 0, 0.22));
 }
 
 .lp-guitar-body {
@@ -189,47 +206,65 @@ body.lp-body {
 }
 
 .lp-benefits {
-  padding: 20px 28px 14px;
+  padding: 24px 28px;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px;
+  gap: 20px;
+  background: var(--lp-bg-1);
 }
 
 .lp-benefits article {
-  border-radius: 16px;
-  padding: 14px;
+  border-radius: 18px;
+  padding: 24px;
   background: var(--lp-card);
-  border: 1px solid rgba(210, 210, 215, 0.72);
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--lp-line);
 }
 
 .lp-benefits h2,
 .lp-how h2 {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 1.19;
+  letter-spacing: 0.231px;
 }
 
 .lp-benefits p {
   margin: 8px 0 0;
-  color: var(--lp-muted);
+  color: var(--lp-ink);
+  font-size: 17px;
+  line-height: 1.47;
+  letter-spacing: -0.374px;
 }
 
 .lp-how {
-  padding: 12px 28px 24px;
+  padding: 80px 28px;
+  background: var(--lp-dark-tile);
+  color: #ffffff;
 }
 
 .lp-how ol {
   margin: 10px 0 0;
   padding-left: 18px;
-  color: var(--lp-muted);
-  line-height: 1.7;
+  color: #ffffff;
+  font-size: 17px;
+  line-height: 1.47;
 }
 
 .lp-footer {
-  padding: 14px 28px 22px;
+  padding: 64px 28px;
   display: flex;
   justify-content: space-between;
-  border-top: 1px solid rgba(210, 210, 215, 0.82);
+  border-top: 1px solid var(--lp-line);
+  background: var(--lp-bg-1);
+  color: #7a7a7a;
+  font-size: 12px;
+}
+
+.lp-btn:focus-visible,
+.lp-login:focus-visible {
+  outline: 2px solid var(--lp-accent-focus);
+  outline-offset: 2px;
 }
 
 @media (max-width: 900px) {
