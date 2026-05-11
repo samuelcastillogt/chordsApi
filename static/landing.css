@@ -1,12 +1,12 @@
 :root {
-  --lp-bg-1: #ecf2f1;
-  --lp-bg-2: #b7ece6;
-  --lp-bg-3: #5ab7d6;
-  --lp-ink: #102027;
-  --lp-muted: #35505d;
-  --lp-card: rgba(255, 255, 255, 0.72);
-  --lp-accent: #1f8a70;
-  --lp-accent-2: #146a59;
+  --lp-bg-1: #f5f5f7;
+  --lp-bg-2: #fbfbfd;
+  --lp-ink: #1d1d1f;
+  --lp-muted: #6e6e73;
+  --lp-card: rgba(255, 255, 255, 0.76);
+  --lp-accent: #0071e3;
+  --lp-accent-2: #0060c9;
+  --lp-line: #d2d2d7;
 }
 
 * {
@@ -16,20 +16,22 @@
 body.lp-body {
   margin: 0;
   color: var(--lp-ink);
-  font-family: "Avenir Next", "Segoe UI", Roboto, sans-serif;
-  background: radial-gradient(circle at 10% 20%, var(--lp-bg-2), transparent 34%),
-    radial-gradient(circle at 90% 88%, #7fd0dd, transparent 28%),
-    linear-gradient(140deg, var(--lp-bg-1), var(--lp-bg-3));
+  font-family: "SF Pro Text", "SF Pro Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background:
+    radial-gradient(1200px 560px at 12% -10%, rgba(0, 113, 227, 0.1) 0%, rgba(0, 113, 227, 0) 58%),
+    radial-gradient(1000px 520px at 96% 8%, rgba(255, 159, 10, 0.09) 0%, rgba(255, 159, 10, 0) 54%),
+    linear-gradient(180deg, var(--lp-bg-2), var(--lp-bg-1));
   min-height: 100vh;
 }
 
 .lp-shell {
   width: min(1100px, calc(100% - 32px));
-  margin: 16px auto;
-  border-radius: 18px;
-  background: rgba(245, 250, 250, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.62);
-  box-shadow: 0 24px 48px rgba(7, 31, 49, 0.2);
+  margin: 18px auto;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(210, 210, 215, 0.84);
+  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.11);
+  backdrop-filter: blur(16px) saturate(1.15);
   overflow: hidden;
 }
 
@@ -39,11 +41,12 @@ body.lp-body {
   justify-content: space-between;
   gap: 12px;
   padding: 18px 28px;
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.55);
+  border-bottom: 1px solid rgba(210, 210, 215, 0.7);
 }
 
 .lp-brand {
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.02em;
 }
 
@@ -61,9 +64,10 @@ body.lp-body {
 }
 
 .lp-login {
-  border: 1px solid rgba(10, 33, 45, 0.22);
+  border: 1px solid var(--lp-line);
   border-radius: 999px;
   padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.92);
 }
 
 .lp-hero {
@@ -76,16 +80,18 @@ body.lp-body {
   display: inline-block;
   border-radius: 999px;
   padding: 6px 12px;
-  color: var(--lp-accent-2);
+  color: #3a3a3c;
   font-weight: 700;
-  background: rgba(31, 138, 112, 0.15);
+  border: 1px solid rgba(210, 210, 215, 0.95);
+  background: rgba(255, 255, 255, 0.84);
 }
 
 .lp-hero h1 {
   margin: 0 auto;
   max-width: 760px;
   font-size: clamp(2rem, 4.3vw, 4rem);
-  line-height: 1.05;
+  line-height: 1.07;
+  letter-spacing: -0.02em;
 }
 
 .lp-subtitle {
@@ -117,12 +123,13 @@ body.lp-body {
 .lp-btn-primary {
   color: white;
   background: linear-gradient(180deg, var(--lp-accent), var(--lp-accent-2));
+  box-shadow: 0 10px 22px rgba(0, 113, 227, 0.26);
 }
 
 .lp-btn-ghost {
   color: var(--lp-ink);
-  border: 1px solid rgba(10, 33, 45, 0.25);
-  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--lp-line);
+  background: rgba(255, 255, 255, 0.88);
 }
 
 .lp-guitar-stage {
@@ -138,19 +145,19 @@ body.lp-body {
   grid-template-columns: 190px 1fr 60px;
   align-items: center;
   gap: 0;
-  filter: drop-shadow(0 14px 20px rgba(7, 30, 44, 0.23));
+  filter: drop-shadow(0 14px 20px rgba(0, 0, 0, 0.16));
 }
 
 .lp-guitar-body {
   width: 190px;
   height: 190px;
   border-radius: 50%;
-  background: radial-gradient(circle at 33% 28%, #fefefe, #7b8a90 62%, #17181a 100%);
+  background: radial-gradient(circle at 33% 28%, #ffffff, #b6bcc6 62%, #434852 100%);
 }
 
 .lp-guitar-neck {
   height: 26px;
-  background: linear-gradient(90deg, #564138, #c5a487 48%, #3e2f29);
+  background: linear-gradient(90deg, #6a5347, #d0b198 48%, #5a4439);
   border-radius: 7px;
 }
 
@@ -158,7 +165,7 @@ body.lp-body {
   width: 58px;
   height: 54px;
   border-radius: 9px;
-  background: linear-gradient(120deg, #191b20, #393f45);
+  background: linear-gradient(120deg, #2a2d33, #525a63);
 }
 
 .lp-line {
@@ -167,8 +174,8 @@ body.lp-body {
   transform: translateX(-50%);
   width: min(820px, 96%);
   height: 50px;
-  border: 2px solid rgba(8, 27, 38, 0.72);
-  border-color: rgba(8, 27, 38, 0.72) transparent transparent transparent;
+  border: 2px solid rgba(110, 110, 115, 0.52);
+  border-color: rgba(110, 110, 115, 0.52) transparent transparent transparent;
   border-radius: 70%;
 }
 
@@ -189,10 +196,11 @@ body.lp-body {
 }
 
 .lp-benefits article {
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 14px;
   background: var(--lp-card);
-  border: 1px solid rgba(255, 255, 255, 0.58);
+  border: 1px solid rgba(210, 210, 215, 0.72);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.06);
 }
 
 .lp-benefits h2,
@@ -221,7 +229,7 @@ body.lp-body {
   padding: 14px 28px 22px;
   display: flex;
   justify-content: space-between;
-  border-top: 1px solid rgba(13, 37, 51, 0.12);
+  border-top: 1px solid rgba(210, 210, 215, 0.82);
 }
 
 @media (max-width: 900px) {
