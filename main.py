@@ -11,6 +11,7 @@ from db import (
     canciones_table_exists,
     insert_cancion,
     get_cancion_by_slug,
+    list_canciones,
 )
 app = Flask(__name__)
 CORS(app)
@@ -363,6 +364,36 @@ def song_data(song_name: str):
     payload["rawSong"] = ""
     payload["availableChords"] = sorted(CHORD_SHAPES_GUITAR.keys())
     return jsonify(payload)
+
+
+@app.route("/api/v1/songs")
+def songs_list():
+    songs_map: dict[str, dict] = {}
+
+    for slug, payload in SONG_LIBRARY.items():
+        songs_map[slug] = {
+            "slug": slug,
+            "title": payload.get("title") or title_from_slug(slug),
+            "artist": payload.get("artist") or "Desconocido",
+            "summary": f"{len(payload.get('lines', []))} lineas",
+        }
+
+    try:
+        for db_song in list_canciones():
+            slug = (db_song.get("slug") or "").strip()
+            if not slug:
+                continue
+            songs_map[slug] = {
+                "slug": slug,
+                "title": db_song.get("nombre") or title_from_slug(slug),
+                "artist": db_song.get("artista") or "Desconocido",
+                "summary": "Cancion registrada en catalogo",
+            }
+    except Exception:
+        pass
+
+    songs = sorted(songs_map.values(), key=lambda item: item["title"].lower())
+    return jsonify({"songs": songs})
 
 
 @app.route("/admin/song/new", methods=["GET", "POST"])

@@ -113,3 +113,15 @@ def get_cancion_by_slug(slug: str) -> Optional[dict]:
         cur.execute(query, (slug,))
         row = cur.fetchone()
         return dict(row) if row else None
+
+
+def list_canciones() -> list[dict]:
+    query = """
+    SELECT id, slug, nombre, artista, cancion, created_at
+    FROM canciones
+    ORDER BY created_at DESC;
+    """
+    with get_connection() as conn, conn.cursor(row_factory=dict_row) as cur:
+        cur.execute(query)
+        rows = cur.fetchall()
+        return [dict(row) for row in rows]
